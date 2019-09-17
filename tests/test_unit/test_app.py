@@ -1,8 +1,9 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+"""
+Unit tests for app.py module
+"""
+import mock
 import pytest
-from app import render_homepage, format_money
+from src.app import render_homepage, format_money
 
 
 class TestGeneric:

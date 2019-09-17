@@ -28,4 +28,4 @@ def format_num(input_number, clean_rule):
         format_rule = "{:,.2f}"
         result = format_rule.format(float(input_number))
         return result
-    return 'Please enter a valid number'
+    return None
