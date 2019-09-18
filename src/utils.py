@@ -24,7 +24,7 @@ def format_num(input_number, clean_rule):
     """
     input_number: int, float
     """
-    if input_number and clean_rule:
+    if input_number == 0 or input_number and clean_rule:
         format_rule = "{:,.2f}"
         result = format_rule.format(float(input_number))
         return result

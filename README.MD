@@ -5,16 +5,21 @@
 * The project uses flask
 
 
-1.  Step to run the app
+###  Step to run the app
+
+In the top-level directory:
 ```sh
-cd source_dir
-python app.py
-open http://localhost:5000/ in browser to access the UI
+$ export PYTHONPATH="$PYTHONPATH:/top_level_dir/"
+$ export FLASK_ENV=development #range(production|testing|development)
+$ export FLASK_APP=main.py
+$ flask run
 ```
+
 2. Step to run the `unit tests`
 ```sh
-cd source_dir
+export PYTHONPATH="$PYTHONPATH:/top_level_dir/"                                             
 pytest tests/test_unit/*.py
+pytest tests/test_functional/*.py
 ```
 3. Step to run the `unit tests` with `coverage report`
 ```sh

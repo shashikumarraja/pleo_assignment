@@ -1,0 +1,32 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/root.json",
+    "type": "object",
+    "title": "The Root Schema",
+    "required": [
+      "formatted_number",
+      "original_number"
+    ],
+    "properties": {
+      "formatted_number": {
+        "$id": "#/properties/formatted_number",
+        "type": "string",
+        "title": "The Formatted_number Schema",
+        "default": "",
+        "examples": [
+          "10.00"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "original_number": {
+        "$id": "#/properties/original_number",
+        "type": "number",
+        "title": "The Original_number Schema",
+        "default": 0,
+        "examples": [
+          10
+        ]
+      }
+    }
+  }

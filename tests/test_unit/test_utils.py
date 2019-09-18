@@ -28,19 +28,12 @@ class TestFormatNum:
     @settings(verbosity=Verbosity.verbose)
     @given(st.integers())
     def test_output_type_with_int_input(self, number):
-        if number:
-            #only non-zero cases go inside
-            assert isinstance(format_num(number, [(',', ' ')]), str)
-        else:
-            assert format_num(number, [(',', ' ')]) is None
+        assert isinstance(format_num(number, [(',', ' ')]), str)
 
     @settings(verbosity=Verbosity.verbose)
     @given(st.floats())
     def test_output_type_with_float_input(self, number):
-        if number:
-            assert isinstance(format_num(number, [(',', ' ')]), str)
-        else:
-            assert format_num(number, [(',', ' ')]) is None
+        assert isinstance(format_num(number, [(',', ' ')]), str)
 
     def test_no_rule_corner_case(self):
         assert format_num(123.45, [])  is None
@@ -54,3 +47,6 @@ class TestFormatNum:
     def test_no_number_corner_case(self):
         assert format_num('', [(',', ' ')])  is None
 
+    @pytest.mark.parametrize('input_num, formatted_num', [(123.456, '123.46'), (1234.56, '1 234.56'), (1, '1.00'), (0.56789, '0.57'), (-50004, '-50 004.00'), (0, '0.00')])
+    def test_positive_cases(self, input_num, formatted_num):
+        assert format_num(input_num, [(',', ' ')]) == formatted_num

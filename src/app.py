@@ -5,10 +5,10 @@ import logging
 from flask import Flask, request, render_template, jsonify
 from src.utils import format_num
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 logger = app.logger
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def render_homepage():
     """
     Default view on page load
@@ -17,10 +17,12 @@ def render_homepage():
 
 @app.errorhandler(ValueError)
 def handle_custom_exception(error, message):
-    '''Return a custom message and 400 status code'''
+    """
+    Return a custom message and 400 status code
+    """
     return jsonify({'message': message}), 400
 
-@app.route('/format_money')
+@app.route('/format_money', methods=['GET'])
 def format_money():
     """
     Formats the input number based on a rule
@@ -33,7 +35,7 @@ def format_money():
         return handle_custom_exception(error, 'Please enter a valid number')
     result = format_num(input_number, [(',', ' ')])
     logger.info('result: %s' % result)
-    return jsonify({"original_number":input_number, "formatted_number": result})
+    return jsonify({'original_number':input_number, 'formatted_number': result})
 
 
 if __name__ == '__main__':
