@@ -1,33 +1,16 @@
 <html>
   <header>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+     <script src="/static/format_money.js"></script>
+     <title>Format Number</title>
   </header>
  <body>
     <div class='wrapper'>
-      Number: <input type="text" id="input_num" pattern="^(\d+)?([.]?\d+)?$">
+      <h2> Format Number </h2>
+      Enter Number: <input type="text" id="input_num" pattern="^(\d+)?([.]?\d+)?$" >
       <button class='get_result'>Submit</button>
       <div class='result'></div>
     </div>
  </body>
- <script>
-    $(document).ready(function(){
-      $('.wrapper').on('click', '.get_result', function(){
-         var number = $("#input_num").val();
-         $.ajax({
-          url: "/format_money",
-          type: "get",
-          data: {number: number},
-          success: function(response) {
-            $(".result").html('Formatted Number: '+response.formatted_number.toString());
-          },
-          error: function(jqXHR, textStatus, errorThrown)  {
-            const response = JSON.parse(jqXHR.responseText);
-            const error_message = response.message;
-            console.log(error_message)
-            $(".result").html('Error Message: '+error_message);
-          },
-         });
-      });
-    });
- </script>
+ 
 </html>

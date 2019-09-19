@@ -11,6 +11,7 @@ In the top-level directory:
 ```sh
 $ export PYTHONPATH="$PYTHONPATH:/top_level_dir/"
 $ export FLASK_ENV=development #range(production|testing|development)
+$ export APP_SETTINGS=development #range(development|testing|staging|production)
 $ export FLASK_APP=main.py
 $ flask run
 ```
