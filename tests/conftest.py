@@ -5,6 +5,10 @@ from os import path
 from os.path import join, dirname
 import json
 import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from time import sleep
 from src import create_app
 
 
@@ -27,6 +31,7 @@ def test_client():
 
     ctx.pop()
 
+
 @pytest.fixture(scope='module')
 def load_json_schema():
     """
@@ -39,4 +44,26 @@ def load_json_schema():
         with open(absolute_path) as schema_file:
             return json.loads(schema_file.read())
     return _load_json_schema
-    
+
+#Fixture for Firefox
+@pytest.fixture(params=["chrome", "firefox"], scope="class")
+def driver_init(request):
+    """
+    Initiliaze driver for UI tests
+    """
+    if request.param == "chrome":
+        #Local webdriver implementation
+        #web_driver = webdriver.Chrome()
+        #Remote WebDriver implementation
+        web_driver = webdriver.Remote(command_executor='http://0.0.0.0:4444/wd/hub',
+                                      desired_capabilities={'browserName': 'chrome', 'javascriptEnabled': True})
+    if request.param == "firefox":
+     #Local webdriver implementation
+        #web_driver = webdriver.Firefox()
+        #Remote WebDriver implementation
+        web_driver = webdriver.Remote(
+            command_executor='http://0.0.0.0:4444/wd/hub',
+            desired_capabilities={'browserName': 'firefox', 'javascriptEnabled': True})
+    request.cls.driver = web_driver
+    yield
+    web_driver.close()
