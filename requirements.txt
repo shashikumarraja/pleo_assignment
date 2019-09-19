@@ -10,3 +10,4 @@ requests-mock==1.7.0
 flask-testing==0.7.1
 locustio==0.11.0
 jsonschema==2.6.0
+allure-pytest==2.8.5
