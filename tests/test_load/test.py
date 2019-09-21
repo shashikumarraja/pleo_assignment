@@ -2,11 +2,13 @@
 contains load tests for app.py module apis
 """
 import os
-import json
-from locust import HttpLocust, TaskSet, task, events
+import random
+from locust import HttpLocust, TaskSet, task
+import hypothesis.strategies as st
+
 
 class FormatMoney(TaskSet):
-    """ Contains task set which are single-stage i.e non-conversation queries """
+    """ Contains task set to be executed with a specific weight of distribution during load test """
 
     def on_start(self):
         pass
@@ -17,10 +19,18 @@ class FormatMoney(TaskSet):
         else:
             response.failure("%d Error code" % (response.status_code))
 
-    @task()
-    def test_format_money_api(self):
+    @task(50)
+    def test_home_api(self):
         with self.client.get(self.locust.host, catch_response=True, timeout=10) as response:
             self.validate_response(response)
+
+    @task(50)
+    def test_format_money_api(self):
+        number = random.choice(
+            [st.floats(allow_nan=False).example(), st.integers().example()])
+        with self.client.get(self.locust.host + '/format_money?number=%s' % number, catch_response=True, timeout=10) as response:
+            self.validate_response(response)
+
 
 class TestLoad(HttpLocust):
     task_set = FormatMoney
