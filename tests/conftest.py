@@ -18,6 +18,20 @@ from src import create_app
 
 logger = logging.getLogger(__name__)
 
+def pytest_addoption(parser):
+    parser.addoption("--selenium-hub", action="store", default="http://selenium-hub:4444/wd/hub")
+    parser.addoption("--app-url", action="store", default="http://flask-app:5000/")
+
+@pytest.fixture(scope='session')
+def selenium_hub_url(request):
+    hub_url = request.config.option.selenium_hub
+    return hub_url
+
+@pytest.fixture(scope='session', autouse=True)
+def app_url(request):
+    url = request.config.option.app_url
+    return url
+
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
     """ create and set allure report directory to store test run result
@@ -71,27 +85,28 @@ def load_json_schema():
     return _load_json_schema
 
 @pytest.fixture(params=["chrome", "firefox"], scope="class")
-def driver_init(request):
+def driver_init(request, selenium_hub_url):
     """
     Initiliaze driver for UI tests
     """
-    if request.param == "chrome":
-        #Remote WebDriver implementation for chrome
-        web_driver = webdriver.Remote(
-            command_executor='http://localhost:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
-    if request.param == "firefox":
-        #Remote WebDriver implementation for firefox
-        web_driver = webdriver.Remote(
-            command_executor='http://localhost:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.FIREFOX)
+    try:
+        if request.param == "chrome":
+            #Remote WebDriver implementation for chrome
+            web_driver = webdriver.Remote(
+                command_executor=selenium_hub_url,
+                desired_capabilities=DesiredCapabilities.CHROME)
+        if request.param == "firefox":
+            #Remote WebDriver implementation for firefox
+            web_driver = webdriver.Remote(
+                command_executor=selenium_hub_url,
+                desired_capabilities=DesiredCapabilities.FIREFOX)
 
-    request.cls.driver = web_driver
-    request.cls.explicit_wait_time = 10
-    yield
+        request.cls.driver = web_driver
+        request.cls.explicit_wait_time = 10
+        yield
+    finally:
+        web_driver.quit()
 
-    web_driver.close()
-    web_driver.quit()
 
 @pytest.mark.tryfirst
 def pytest_runtest_makereport(item, call, __multicall__):
@@ -99,7 +114,7 @@ def pytest_runtest_makereport(item, call, __multicall__):
     setattr(item, "rep_" + rep.when, rep)
     return rep
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope='function')
 def take_screeshot_on_test_fail(request):
     def test_result():
         if request.node.rep_setup.failed:

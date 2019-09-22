@@ -23,6 +23,10 @@ class HomePage(BasePage):
         element.clear()
         return BasePage.enter_text(self, HomePageLocators.NUMBER_INPUT_BOX, number)
 
+    def clear_text_box(self):
+        element = self.driver.find_element(*HomePageLocators.NUMBER_INPUT_BOX)
+        element.clear()
+        
     def click_submit_button(self):
         element = self.driver.find_element(*HomePageLocators.SUBMIT_BUTTON)
         return element.click()

@@ -3,9 +3,11 @@ contains load tests for app.py module apis
 """
 import os
 import random
+import logging
 from locust import HttpLocust, TaskSet, task
 import hypothesis.strategies as st
 
+logger = logging.getLogger(__name__)
 
 class FormatMoney(TaskSet):
     """ Contains task set to be executed with a specific weight of distribution during load test """
@@ -17,6 +19,7 @@ class FormatMoney(TaskSet):
         if response.status_code in [200]:
             response.success()
         else:
+            logger.error(response.url)
             response.failure("%d Error code" % (response.status_code))
 
     @task(50)

@@ -5,3 +5,4 @@ __pycache__
 .hypothesis
 *.log
 .coverage
+readme_gifs

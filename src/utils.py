@@ -1,7 +1,6 @@
 """
 Contains utility functions to be used across the project
 """
-import sys
 
 def clean_string(function):
     """
@@ -11,7 +10,7 @@ def clean_string(function):
     def do_cleaning(num, rules):
         """
         num: int, float
-        rules: list of set
+        rules: list of tuples
         """
         word = function(num, rules)
         if word and rules:
@@ -24,17 +23,15 @@ def clean_string(function):
 @clean_string
 def format_num(input_number, clean_rule):
     """
-    input_number: int, float
+    input_number: int, float, string
+    clear_rule: list of tuples
     """
     if (input_number == 0 or input_number) and clean_rule:
         format_rule = "{:,.2f}"
-        result = format_rule.format(float(input_number))
-        return result
+        try:
+            result = format_rule.format(float(input_number))
+            return result
+        except ValueError as error:
+            return None
     return None
-
-def validate_within_input_bound(number):
-    int_max = sys.maxsize
-    int_min = -sys.maxsize-1
-    if number > int_min and number < int_max:
-        return True
-    return False
+    

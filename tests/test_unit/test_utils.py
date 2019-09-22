@@ -6,6 +6,7 @@ import pytest
 from hypothesis import given, settings, Verbosity, example
 import hypothesis.strategies as st
 from src.utils import clean_string, format_num
+from naughty_string_validator import get_naughty_string_list
 
 
 class TestGeneric:
@@ -46,6 +47,10 @@ class TestFormatNum:
 
     def test_no_number_corner_case(self):
         assert format_num('', [(',', ' ')])  is None
+
+    @pytest.mark.parametrize('number', list(filter(lambda x: not (isinstance(x, float) and  isinstance(x, int) and x.isdigit()), get_naughty_string_list())))
+    def test_all_naughty_string_case(self, number):
+        assert format_num(number, [(',', ' ')])  is None
 
     @pytest.mark.parametrize('input_num, formatted_num', [(123.456, '123.46'), (1234.56, '1 234.56'), (1, '1.00'), (0.56789, '0.57'), (-50004, '-50 004.00'), (0, '0.00')])
     def test_positive_cases(self, input_num, formatted_num):
